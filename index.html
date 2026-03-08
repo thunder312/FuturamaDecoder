@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1a0a2e" />
+  <meta name="description" content="Futurama Alienese Decoder – Übersetze Text in die Alien-Schrift aus Futurama" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Futurama Decoder</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1 class="app-title">🛸 Futurama Decoder</h1>
+    <p class="app-subtitle">Alienese Translator</p>
+  </header>
+
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-tab="text">✏️ Text</button>
+    <button class="tab-btn" data-tab="camera">📷 Kamera</button>
+    <button class="tab-btn" data-tab="photo">🖼️ Foto</button>
+    <button class="tab-btn" data-tab="reference">📖 Tabelle</button>
+  </nav>
+
+  <main class="app-main">
+
+    <!-- TAB: Text-Eingabe -->
+    <section id="tab-text" class="tab-content active">
+      <div class="direction-toggle">
+        <button class="dir-btn active" id="dirLatinToAlien">Latin → Alien</button>
+        <button class="dir-btn" id="dirAlienToLatin">Alien → Latin</button>
+      </div>
+      <div class="input-group">
+        <label for="textInput">Eingabe</label>
+        <textarea id="textInput" placeholder="Text eingeben…" rows="4" autocomplete="off" spellcheck="false"></textarea>
+      </div>
+      <div class="output-group">
+        <label>Ausgabe</label>
+        <div id="textOutput" class="output-display"></div>
+        <button class="btn-copy" id="copyBtn">Kopieren</button>
+      </div>
+    </section>
+
+    <!-- TAB: Live-Kamera -->
+    <section id="tab-camera" class="tab-content">
+      <div class="camera-container">
+        <video id="cameraVideo" autoplay playsinline muted></video>
+        <canvas id="cameraCanvas" class="hidden"></canvas>
+        <div class="camera-overlay">
+          <div class="scan-frame"></div>
+          <p class="scan-hint">Kamera auf Text richten</p>
+        </div>
+      </div>
+      <div class="camera-controls">
+        <button class="btn-primary" id="startCameraBtn">Kamera starten</button>
+        <button class="btn-secondary hidden" id="captureBtn">📸 Aufnehmen</button>
+        <button class="btn-secondary hidden" id="stopCameraBtn">Stopp</button>
+      </div>
+      <div id="cameraResult" class="result-box hidden"></div>
+    </section>
+
+    <!-- TAB: Foto hochladen -->
+    <section id="tab-photo" class="tab-content">
+      <label class="upload-area" for="photoInput">
+        <div class="upload-icon">🖼️</div>
+        <p>Foto auswählen oder aufnehmen</p>
+        <input type="file" id="photoInput" accept="image/*" capture="environment" class="hidden" />
+      </label>
+      <div id="photoPreview" class="photo-preview hidden">
+        <img id="previewImg" src="" alt="Vorschau" />
+        <button class="btn-primary" id="analyzeBtn">🔍 Analysieren</button>
+      </div>
+      <div id="ocrProgress" class="progress-bar hidden">
+        <div class="progress-fill"></div>
+        <span class="progress-label">OCR läuft…</span>
+      </div>
+      <div id="photoResult" class="result-box hidden"></div>
+    </section>
+
+    <!-- TAB: Referenztabelle -->
+    <section id="tab-reference" class="tab-content">
+      <h2>Alienese Alphabet</h2>
+      <div id="referenceGrid" class="reference-grid"></div>
+    </section>
+
+  </main>
+
+  <!-- Tesseract.js (wird lazy geladen) -->
+  <script src="js/alphabet.js"></script>
+  <script src="js/translator.js"></script>
+  <script src="js/camera.js"></script>
+  <script src="js/ocr.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

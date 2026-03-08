@@ -1,0 +1,390 @@
+/* ── Reset & Custom Properties ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0d0520;
+  --bg2:       #1a0a2e;
+  --bg3:       #2a1245;
+  --accent:    #7c3aed;
+  --accent2:   #a855f7;
+  --neon:      #c084fc;
+  --glow:      #e879f9;
+  --text:      #e2d9f3;
+  --text-dim:  #9d8fba;
+  --green:     #4ade80;
+  --red:       #f87171;
+  --radius:    12px;
+  --gap:       16px;
+  --header-h: 64px;
+  --tabbar-h: 52px;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ── Header ────────────────────────────────────────────────────────────── */
+.app-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--header-h);
+  background: var(--bg2);
+  border-bottom: 1px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+}
+
+.app-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--neon);
+  text-shadow: 0 0 10px var(--glow);
+  letter-spacing: 0.05em;
+}
+
+.app-subtitle {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ── Tab Bar ───────────────────────────────────────────────────────────── */
+.tab-bar {
+  position: fixed;
+  top: var(--header-h);
+  left: 0; right: 0;
+  height: var(--tabbar-h);
+  background: var(--bg2);
+  border-bottom: 1px solid var(--bg3);
+  display: flex;
+  z-index: 99;
+}
+
+.tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+  padding: 8px 4px;
+  letter-spacing: 0.03em;
+}
+
+.tab-btn.active {
+  color: var(--neon);
+  background: rgba(124, 58, 237, 0.15);
+  border-bottom: 2px solid var(--accent2);
+}
+
+/* ── Main Content ──────────────────────────────────────────────────────── */
+.app-main {
+  margin-top: calc(var(--header-h) + var(--tabbar-h));
+  padding: var(--gap);
+  min-height: calc(100vh - var(--header-h) - var(--tabbar-h));
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── Text Tab ──────────────────────────────────────────────────────────── */
+.direction-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: var(--gap);
+}
+
+.dir-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--bg3);
+  background: var(--bg2);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dir-btn.active {
+  background: var(--accent);
+  border-color: var(--accent2);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.5);
+}
+
+.input-group, .output-group {
+  margin-bottom: var(--gap);
+}
+
+.input-group label, .output-group label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+
+textarea {
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--bg3);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 1rem;
+  padding: 12px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+textarea:focus { border-color: var(--accent); }
+
+.output-display {
+  min-height: 80px;
+  background: var(--bg2);
+  border: 1px solid var(--bg3);
+  border-radius: var(--radius);
+  padding: 12px;
+  font-size: 1.5rem;
+  line-height: 2;
+  letter-spacing: 0.1em;
+  word-break: break-all;
+  /* Alien-Font wird via JS gesetzt falls vorhanden */
+}
+
+.btn-copy {
+  margin-top: 8px;
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent2);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-copy:active { background: var(--accent); color: #fff; }
+
+/* ── Camera Tab ────────────────────────────────────────────────────────── */
+.camera-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #000;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: var(--gap);
+}
+
+#cameraVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.scan-frame {
+  width: 80%;
+  height: 60%;
+  border: 2px solid var(--neon);
+  border-radius: 8px;
+  box-shadow: 0 0 0 1000px rgba(0,0,0,0.4), 0 0 20px var(--glow);
+}
+
+.scan-hint {
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: var(--neon);
+  text-shadow: 0 0 8px var(--glow);
+}
+
+.camera-controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ── Photo Tab ─────────────────────────────────────────────────────────── */
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 2px dashed var(--bg3);
+  border-radius: var(--radius);
+  padding: 40px 20px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  text-align: center;
+}
+
+.upload-area:hover { border-color: var(--accent); }
+
+.upload-icon { font-size: 3rem; }
+
+.photo-preview {
+  margin-top: var(--gap);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.photo-preview img {
+  width: 100%;
+  border-radius: var(--radius);
+  max-height: 300px;
+  object-fit: contain;
+  background: #000;
+}
+
+.progress-bar {
+  margin-top: var(--gap);
+  background: var(--bg2);
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--glow));
+  width: 0%;
+  transition: width 0.3s;
+  border-radius: 999px;
+}
+
+.progress-label {
+  display: block;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* ── Reference Tab ─────────────────────────────────────────────────────── */
+#tab-reference h2 {
+  font-size: 1rem;
+  color: var(--neon);
+  margin-bottom: var(--gap);
+  text-align: center;
+}
+
+.reference-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 10px;
+}
+
+.ref-card {
+  background: var(--bg2);
+  border: 1px solid var(--bg3);
+  border-radius: 8px;
+  padding: 10px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ref-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+}
+
+.ref-alien {
+  font-size: 1.8rem;
+  line-height: 1.3;
+  display: block;
+}
+
+.ref-latin {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+
+/* ── Shared Components ─────────────────────────────────────────────────── */
+.btn-primary {
+  padding: 12px 24px;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.4);
+}
+
+.btn-primary:active { background: var(--accent2); }
+
+.btn-secondary {
+  padding: 12px 24px;
+  border-radius: var(--radius);
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent2);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:active { background: rgba(124, 58, 237, 0.2); }
+
+.result-box {
+  margin-top: var(--gap);
+  background: var(--bg2);
+  border: 1px solid var(--bg3);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.result-latin {
+  font-size: 1rem;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.result-alien {
+  font-size: 1.6rem;
+  line-height: 2;
+  letter-spacing: 0.1em;
+  color: var(--neon);
+}
+
+.hidden { display: none !important; }
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
