@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#1a0a2e" />
-  <meta name="description" content="Futurama Alienese Decoder – Übersetze Text in die Alien-Schrift aus Futurama" />
+  <meta name="description" content="Futurama Alienese Decoder – Live-Kamera Übersetzung der Alien-Schrift" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -46,25 +46,41 @@
 
     <!-- TAB: Live-Kamera -->
     <section id="tab-camera" class="tab-content">
-      <div class="camera-container">
+      <div class="camera-container" id="cameraContainer">
         <video id="cameraVideo" autoplay playsinline muted></video>
         <canvas id="cameraCanvas" class="hidden"></canvas>
-        <div class="camera-overlay">
+
+        <!-- Scan-Rahmen Overlay -->
+        <div class="camera-overlay" id="cameraOverlay">
           <div class="scan-frame"></div>
-          <p class="scan-hint">Kamera auf Text richten</p>
+          <p class="scan-hint" id="scanHint">Kamera auf Text richten</p>
+        </div>
+
+        <!-- Live-Übersetzungs-Overlay -->
+        <div class="live-result-overlay hidden" id="liveResultOverlay">
+          <div class="live-result-latin" id="liveResultLatin"></div>
+          <div class="live-result-alien" id="liveResultAlien"></div>
+        </div>
+
+        <!-- Scan-Indicator -->
+        <div class="scan-indicator hidden" id="scanIndicator">
+          <span class="scan-dot"></span> Scannt…
         </div>
       </div>
+
       <div class="camera-controls">
         <button class="btn-primary" id="startCameraBtn">Kamera starten</button>
-        <button class="btn-secondary hidden" id="captureBtn">📸 Aufnehmen</button>
-        <button class="btn-secondary hidden" id="stopCameraBtn">Stopp</button>
+        <button class="btn-secondary hidden" id="liveScanBtn">🔴 Live-Scan</button>
+        <button class="btn-secondary hidden" id="captureBtn">📸 Einmal scannen</button>
+        <button class="btn-danger hidden" id="stopCameraBtn">■ Stopp</button>
       </div>
+
       <div id="cameraResult" class="result-box hidden"></div>
     </section>
 
     <!-- TAB: Foto hochladen -->
     <section id="tab-photo" class="tab-content">
-      <label class="upload-area" for="photoInput">
+      <label class="upload-area" for="photoInput" id="uploadArea">
         <div class="upload-icon">🖼️</div>
         <p>Foto auswählen oder aufnehmen</p>
         <input type="file" id="photoInput" accept="image/*" capture="environment" class="hidden" />
@@ -73,8 +89,10 @@
         <img id="previewImg" src="" alt="Vorschau" />
         <button class="btn-primary" id="analyzeBtn">🔍 Analysieren</button>
       </div>
-      <div id="ocrProgress" class="progress-bar hidden">
-        <div class="progress-fill"></div>
+      <div id="ocrProgress" class="progress-wrap hidden">
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
         <span class="progress-label">OCR läuft…</span>
       </div>
       <div id="photoResult" class="result-box hidden"></div>
@@ -88,7 +106,6 @@
 
   </main>
 
-  <!-- Tesseract.js (wird lazy geladen) -->
   <script src="js/alphabet.js"></script>
   <script src="js/translator.js"></script>
   <script src="js/camera.js"></script>

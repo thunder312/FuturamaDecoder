@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- D: Vertical line with a loop at the top right -->
+  <line x1="38" y1="18" x2="38" y2="82" stroke="#1a0a2e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M38,18 Q72,18 72,38 Q72,58 38,58" stroke="#1a0a2e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

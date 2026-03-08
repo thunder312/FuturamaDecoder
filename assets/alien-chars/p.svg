@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- P: Vertical line with a loop/half-circle at the top -->
+  <line x1="30" y1="18" x2="30" y2="82" stroke="#1a0a2e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M30,18 Q70,18 70,38 Q70,58 30,58" stroke="#1a0a2e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

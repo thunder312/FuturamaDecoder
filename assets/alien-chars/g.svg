@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- G: Circle with a gap and inward notch on the right side -->
+  <path d="M72,38 A26,26 0 1,0 72,62" stroke="#1a0a2e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <polyline points="72,50 58,50 72,50" stroke="#1a0a2e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

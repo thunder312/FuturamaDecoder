@@ -5,7 +5,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // ── Tab-Navigation ──────────────────────────────────────────────────────
-  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabBtns     = document.querySelectorAll('.tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
 
   tabBtns.forEach(btn => {
@@ -16,37 +16,31 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.classList.add('active');
       document.getElementById(`tab-${target}`).classList.add('active');
 
-      // Kamera stoppen wenn Tab gewechselt
       if (target !== 'camera' && Camera.isActive()) {
         Camera.stop();
-        updateCameraUI(false);
+        resetCameraUI();
       }
-
-      // Referenztabelle beim ersten Öffnen rendern
       if (target === 'reference') renderReferenceGrid();
     });
   });
 
   // ── Text-Tab ────────────────────────────────────────────────────────────
-  const textInput = document.getElementById('textInput');
-  const textOutput = document.getElementById('textOutput');
+  const textInput      = document.getElementById('textInput');
+  const textOutput     = document.getElementById('textOutput');
   const dirLatinToAlien = document.getElementById('dirLatinToAlien');
   const dirAlienToLatin = document.getElementById('dirAlienToLatin');
-  const copyBtn = document.getElementById('copyBtn');
+  const copyBtn        = document.getElementById('copyBtn');
 
   let direction = 'latin-to-alien';
 
   function translateText() {
     const input = textInput.value;
     if (!input.trim()) { textOutput.innerHTML = ''; return; }
-
     if (direction === 'latin-to-alien') {
       const alienText = Translator.latinToAlien(input);
       textOutput.innerHTML = Translator.renderAlienHTML(alienText, 'svg');
     } else {
-      // Alien → Latin: Eingabe als PUA-Codepoints interpretieren
-      const latinText = Translator.alienToLatin(input);
-      textOutput.textContent = latinText;
+      textOutput.textContent = Translator.alienToLatin(input);
     }
   }
 
@@ -81,69 +75,138 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ── Kamera-Tab ──────────────────────────────────────────────────────────
-  const startCameraBtn = document.getElementById('startCameraBtn');
-  const captureBtn = document.getElementById('captureBtn');
-  const stopCameraBtn = document.getElementById('stopCameraBtn');
-  const cameraResult = document.getElementById('cameraResult');
+  const startCameraBtn     = document.getElementById('startCameraBtn');
+  const liveScanBtn        = document.getElementById('liveScanBtn');
+  const captureBtn         = document.getElementById('captureBtn');
+  const stopCameraBtn      = document.getElementById('stopCameraBtn');
+  const cameraResult       = document.getElementById('cameraResult');
+  const liveResultOverlay  = document.getElementById('liveResultOverlay');
+  const liveResultLatin    = document.getElementById('liveResultLatin');
+  const liveResultAlien    = document.getElementById('liveResultAlien');
+  const scanIndicator      = document.getElementById('scanIndicator');
+  const scanHint           = document.getElementById('scanHint');
 
-  function updateCameraUI(active) {
-    startCameraBtn.classList.toggle('hidden', active);
-    captureBtn.classList.toggle('hidden', !active);
-    stopCameraBtn.classList.toggle('hidden', !active);
+  let liveScanActive = false;
+
+  function resetCameraUI() {
+    startCameraBtn.classList.remove('hidden');
+    liveScanBtn.classList.add('hidden');
+    captureBtn.classList.add('hidden');
+    stopCameraBtn.classList.add('hidden');
+    cameraResult.classList.add('hidden');
+    liveResultOverlay.classList.add('hidden');
+    scanIndicator.classList.add('hidden');
+    scanHint.textContent = 'Kamera auf Text richten';
+    liveScanBtn.textContent = '🔴 Live-Scan';
+    liveScanBtn.classList.remove('active-scan');
+    liveScanActive = false;
   }
 
   startCameraBtn.addEventListener('click', async () => {
     try {
       await Camera.start();
-      updateCameraUI(true);
+      startCameraBtn.classList.add('hidden');
+      liveScanBtn.classList.remove('hidden');
+      captureBtn.classList.remove('hidden');
+      stopCameraBtn.classList.remove('hidden');
     } catch (err) {
       showError(cameraResult, err.message);
+      cameraResult.classList.remove('hidden');
     }
   });
 
   stopCameraBtn.addEventListener('click', () => {
     Camera.stop();
-    updateCameraUI(false);
-    cameraResult.classList.add('hidden');
+    OCR.terminate();
+    resetCameraUI();
   });
 
+  // Live-Scan Toggle
+  liveScanBtn.addEventListener('click', () => {
+    if (liveScanActive) {
+      Camera.stopLiveScan();
+      liveScanActive = false;
+      liveScanBtn.textContent = '🔴 Live-Scan';
+      liveScanBtn.classList.remove('active-scan');
+      scanIndicator.classList.add('hidden');
+      scanHint.textContent = 'Kamera auf Text richten';
+    } else {
+      liveScanActive = true;
+      liveScanBtn.textContent = '⏹ Live-Scan stoppen';
+      liveScanBtn.classList.add('active-scan');
+      scanIndicator.classList.remove('hidden');
+      liveResultOverlay.classList.add('hidden');
+      scanHint.textContent = '';
+
+      Camera.startLiveScan((text, err) => {
+        scanIndicator.classList.add('hidden');
+        if (err) {
+          liveResultOverlay.classList.add('hidden');
+          return;
+        }
+        if (!text) {
+          liveResultOverlay.classList.add('hidden');
+          scanHint.textContent = 'Kein Text erkannt…';
+          return;
+        }
+        const clean = text.replace(/[^a-zA-Z0-9 \n.,!?'-]/g, '').trim();
+        if (!clean) {
+          liveResultOverlay.classList.add('hidden');
+          return;
+        }
+        const alienText = Translator.latinToAlien(clean);
+        liveResultLatin.textContent = clean;
+        liveResultAlien.innerHTML   = Translator.renderAlienHTML(alienText, 'svg');
+        liveResultOverlay.classList.remove('hidden');
+        scanHint.textContent = '';
+
+        // Kurz Scan-Indicator wieder zeigen
+        setTimeout(() => {
+          if (liveScanActive) scanIndicator.classList.remove('hidden');
+        }, 1800);
+      }, 2500);
+    }
+  });
+
+  // Einmaliger Capture-Scan
   captureBtn.addEventListener('click', async () => {
-    const { dataUrl } = Camera.capture();
-    captureBtn.disabled = true;
+    captureBtn.disabled  = true;
     captureBtn.textContent = '⏳ OCR…';
     cameraResult.classList.remove('hidden');
-    cameraResult.innerHTML = '<p style="color:var(--text-dim)">Erkenne Text…</p>';
+    cameraResult.innerHTML = '<p class="dim">Erkenne Text…</p>';
 
     try {
+      const { dataUrl } = Camera.capture();
       const text = await OCR.recognize(dataUrl, null);
       if (!text) {
-        cameraResult.innerHTML = '<p style="color:var(--text-dim)">Kein Text erkannt.</p>';
+        cameraResult.innerHTML = '<p class="dim">Kein Text erkannt.</p>';
       } else {
         showTranslationResult(cameraResult, text);
       }
     } catch (err) {
       showError(cameraResult, err.message);
     } finally {
-      captureBtn.disabled = false;
-      captureBtn.textContent = '📸 Aufnehmen';
+      captureBtn.disabled  = false;
+      captureBtn.textContent = '📸 Einmal scannen';
     }
   });
 
   // ── Foto-Tab ────────────────────────────────────────────────────────────
-  const photoInput = document.getElementById('photoInput');
+  const photoInput   = document.getElementById('photoInput');
+  const uploadArea   = document.getElementById('uploadArea');
   const photoPreview = document.getElementById('photoPreview');
-  const previewImg = document.getElementById('previewImg');
-  const analyzeBtn = document.getElementById('analyzeBtn');
-  const ocrProgress = document.getElementById('ocrProgress');
+  const previewImg   = document.getElementById('previewImg');
+  const analyzeBtn   = document.getElementById('analyzeBtn');
+  const ocrProgress  = document.getElementById('ocrProgress');
   const progressFill = ocrProgress.querySelector('.progress-fill');
   const progressLabel = ocrProgress.querySelector('.progress-label');
-  const photoResult = document.getElementById('photoResult');
+  const photoResult  = document.getElementById('photoResult');
 
   photoInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const url = URL.createObjectURL(file);
-    previewImg.src = url;
+    previewImg.src = URL.createObjectURL(file);
+    uploadArea.classList.add('hidden');
     photoPreview.classList.remove('hidden');
     photoResult.classList.add('hidden');
     ocrProgress.classList.add('hidden');
@@ -152,6 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
   analyzeBtn.addEventListener('click', async () => {
     analyzeBtn.disabled = true;
     ocrProgress.classList.remove('hidden');
+    progressFill.style.width = '0%';
+    progressLabel.textContent = 'OCR: 0%';
     photoResult.classList.add('hidden');
 
     try {
@@ -159,14 +224,11 @@ document.addEventListener('DOMContentLoaded', () => {
         progressFill.style.width = pct + '%';
         progressLabel.textContent = `OCR: ${pct}%`;
       });
-
       ocrProgress.classList.add('hidden');
-
+      photoResult.classList.remove('hidden');
       if (!text) {
-        photoResult.classList.remove('hidden');
-        photoResult.innerHTML = '<p style="color:var(--text-dim)">Kein Text erkannt.</p>';
+        photoResult.innerHTML = '<p class="dim">Kein Text erkannt.</p>';
       } else {
-        photoResult.classList.remove('hidden');
         showTranslationResult(photoResult, text);
       }
     } catch (err) {
@@ -177,6 +239,19 @@ document.addEventListener('DOMContentLoaded', () => {
       analyzeBtn.disabled = false;
     }
   });
+
+  // Neues Foto
+  const newPhotoBtn = document.createElement('button');
+  newPhotoBtn.className = 'btn-secondary';
+  newPhotoBtn.textContent = '↩ Neues Foto';
+  newPhotoBtn.style.marginTop = '8px';
+  newPhotoBtn.addEventListener('click', () => {
+    uploadArea.classList.remove('hidden');
+    photoPreview.classList.add('hidden');
+    photoResult.classList.add('hidden');
+    photoInput.value = '';
+  });
+  photoPreview.appendChild(newPhotoBtn);
 
   // ── Referenz-Grid ───────────────────────────────────────────────────────
   let referenceRendered = false;
@@ -189,19 +264,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     grid.innerHTML = ALPHABET_META.map(({ latin, svgFile, description }) => `
       <div class="ref-card" title="${description}" onclick="insertChar('${latin}')">
-        <img class="ref-alien" src="assets/alien-chars/${svgFile}"
+        <img class="ref-alien-img" src="assets/alien-chars/${svgFile}"
              alt="${latin}" onerror="this.outerHTML='<span class=ref-alien>${ALIEN_MAP[latin]}</span>'" />
         <span class="ref-latin">${latin}</span>
       </div>
     `).join('');
   }
 
-  // ── Hilfsfunktionen ─────────────────────────────────────────────────────
+  // ── Helpers ─────────────────────────────────────────────────────────────
 
   function showTranslationResult(container, latinText) {
-    const alienText = Translator.latinToAlien(latinText);
+    const clean = latinText.replace(/\s+/g, ' ').trim();
+    const alienText = Translator.latinToAlien(clean);
     container.innerHTML = `
-      <p class="result-latin"><strong>Erkannt:</strong> ${escapeHtml(latinText)}</p>
+      <p class="result-latin"><strong>Erkannt:</strong> ${escapeHtml(clean)}</p>
       <div class="result-alien">${Translator.renderAlienHTML(alienText, 'svg')}</div>
     `;
   }
@@ -215,17 +291,14 @@ document.addEventListener('DOMContentLoaded', () => {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  // Service Worker registrieren
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js').catch(() => {});
   }
 });
 
-// Global: Zeichen aus Referenztabelle in Texteingabe einfügen
 function insertChar(latin) {
   const textInput = document.getElementById('textInput');
   textInput.value += latin;
   textInput.dispatchEvent(new Event('input'));
-  // Zum Text-Tab wechseln
   document.querySelector('[data-tab="text"]').click();
 }

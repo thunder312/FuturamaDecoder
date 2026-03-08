@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- C: Simple arc/crescent opening to the right -->
+  <path d="M65,20 A28,28 0 1,0 65,80" stroke="#1a0a2e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

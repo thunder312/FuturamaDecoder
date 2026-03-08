@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- I: Vertical line with serifs at top and bottom -->
+  <line x1="50" y1="18" x2="50" y2="82" stroke="#1a0a2e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="32" y1="18" x2="68" y2="18" stroke="#1a0a2e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="32" y1="82" x2="68" y2="82" stroke="#1a0a2e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
