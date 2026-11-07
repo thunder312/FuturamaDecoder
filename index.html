@@ -1,28 +1,31 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-eulenwerk="spielerei">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#1a0a2e" />
+  <meta name="theme-color" content="#121417" />
   <meta name="description" content="Futurama Alienese Decoder – Live-Kamera Übersetzung der Alien-Schrift" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Futurama Decoder</title>
   <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/eulenwerk.css" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <header class="app-header">
-    <h1 class="app-title">🛸 Futurama Decoder</h1>
+    <h1 class="app-title"><img src="favicon.svg" alt="" class="app-logo">Futurama Decoder</h1>
     <p class="app-subtitle">Alienese Translator</p>
   </header>
 
   <nav class="tab-bar">
-    <button class="tab-btn active" data-tab="text">✏️ Text</button>
-    <button class="tab-btn" data-tab="camera">📷 Kamera</button>
-    <button class="tab-btn" data-tab="photo">🖼️ Foto</button>
-    <button class="tab-btn" data-tab="reference">📖 Tabelle</button>
+    <button class="tab-btn active" data-tab="text"><svg class="ew-icon ew-icon--sm" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Text</button>
+    <button class="tab-btn" data-tab="camera"><svg class="ew-icon ew-icon--sm" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>Kamera</button>
+    <button class="tab-btn" data-tab="photo"><svg class="ew-icon ew-icon--sm" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>Foto</button>
+    <button class="tab-btn" data-tab="reference"><svg class="ew-icon ew-icon--sm" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>Tabelle</button>
   </nav>
 
   <main class="app-main">
@@ -104,6 +107,10 @@
       <div id="referenceGrid" class="reference-grid"></div>
     </section>
 
+    <footer class="ew-footer ">
+      <a class="ew-brand" href="https://daniel-ertl.de" target="_blank" rel="noopener"><svg class="ew-logo" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5 C11 12 16 13 24 13 C28 13 30 15 32 16 C34 15 36 13 40 13 C48 13 53 12 56 5"/><circle cx="22" cy="28" r="9"/><circle cx="42" cy="28" r="9"/><circle fill="currentColor" stroke="none" cx="22" cy="28" r="3.2"/><circle fill="currentColor" stroke="none" cx="42" cy="28" r="3.2"/><path d="M29.5 39 L32 42.5 L34.5 39"/><path d="M13 28 V48 C13 54 18 59 24 59 H40 C46 59 51 54 51 48 V28"/><path d="M19 40 C18.5 48 19.5 54 23 59"/><path d="M45 40 C45.5 48 44.5 54 41 59"/></svg>Ein Eulenwerk-Projekt</a>
+      <button type="button" class="ew-btn ew-btn--ghost ew-btn--sm" data-ew-about>Über Futurama Decoder</button>
+    </footer>
   </main>
 
   <script src="js/alphabet.js"></script>
@@ -111,5 +118,19 @@
   <script src="js/camera.js"></script>
   <script src="js/ocr.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/eulenwerk-about.js"></script>
+  <script>EulenwerkAbout.init({
+  "app": "Futurama Decoder",
+  "version": "1.0.0",
+  "description": "Übersetzt die Alienese-Schrift aus Futurama – per Texteingabe, Live-Kamera oder Foto, mit Referenztabelle.",
+  "stack": [
+    "Vanilla JS",
+    "WebRTC-Kamera",
+    "Tesseract.js",
+    "PWA"
+  ],
+  "github": "https://github.com/thunder312/FuturamaDecoder",
+  "logo": "favicon.svg"
+});</script>
 </body>
 </html>

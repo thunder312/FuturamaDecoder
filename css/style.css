@@ -2,17 +2,18 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #0d0520;
-  --bg2:       #1a0a2e;
-  --bg3:       #2a1245;
-  --accent:    #7c3aed;
-  --accent2:   #a855f7;
-  --neon:      #c084fc;
-  --glow:      #e879f9;
-  --text:      #e2d9f3;
-  --text-dim:  #9d8fba;
-  --green:     #4ade80;
-  --red:       #f87171;
+  /* Eulenwerk Design-System (Kategorie Spielerei = Rosé) */
+  --bg:        var(--ew-bg);
+  --bg2:       var(--ew-surface);
+  --bg3:       var(--ew-surface-2);
+  --accent:    var(--ew-accent);
+  --accent2:   var(--ew-accent-hover);
+  --neon:      var(--ew-accent-light);
+  --glow:      var(--ew-accent-soft);
+  --text:      var(--ew-text);
+  --text-dim:  var(--ew-text-muted);
+  --green:     var(--ew-ok);
+  --red:       var(--ew-danger);
   --radius:    12px;
   --gap:       16px;
   --header-h:  60px;
@@ -21,7 +22,7 @@
 
 html, body {
   height: 100%;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--ew-font-sans);
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
@@ -33,21 +34,20 @@ html, body {
   top: 0; left: 0; right: 0;
   height: var(--header-h);
   background: var(--bg2);
-  border-bottom: 1px solid var(--accent);
+  border-bottom: 1px solid var(--ew-border);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 100;
-  box-shadow: 0 0 20px rgba(124,58,237,0.4);
 }
 
 .app-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--neon);
-  text-shadow: 0 0 10px var(--glow);
-  letter-spacing: 0.05em;
+  color: var(--ew-text);
+  letter-spacing: 0;
+  display: flex; align-items: center; gap: 10px;
 }
 
 .app-subtitle {
@@ -85,7 +85,7 @@ html, body {
 
 .tab-btn.active {
   color: var(--neon);
-  background: rgba(124,58,237,0.15);
+  background: rgba(244,114,182,0.15);
   border-bottom: 2px solid var(--accent2);
 }
 
@@ -123,8 +123,8 @@ html, body {
 .dir-btn.active {
   background: var(--accent);
   border-color: var(--accent2);
-  color: #fff;
-  box-shadow: 0 0 12px rgba(124,58,237,0.5);
+  color: var(--ew-text-on-accent);
+  box-shadow: 0 0 12px rgba(244,114,182,0.5);
 }
 
 .input-group, .output-group { margin-bottom: var(--gap); }
@@ -175,7 +175,7 @@ textarea:focus { border-color: var(--accent); }
   cursor: pointer;
   transition: all 0.2s;
 }
-.btn-copy:active { background: var(--accent); color: #fff; }
+.btn-copy:active { background: var(--accent); color: var(--ew-text-on-accent); }
 
 /* ── Camera Tab ────────────────────────────────────────────────────────── */
 .camera-container {
@@ -391,7 +391,7 @@ textarea:focus { border-color: var(--accent); }
 }
 .ref-card:active {
   border-color: var(--accent);
-  box-shadow: 0 0 10px rgba(124,58,237,0.4);
+  box-shadow: 0 0 10px rgba(244,114,182,0.4);
 }
 
 .ref-alien-img {
@@ -423,12 +423,12 @@ textarea:focus { border-color: var(--accent); }
   border-radius: var(--radius);
   border: none;
   background: var(--accent);
-  color: #fff;
+  color: var(--ew-text-on-accent);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
-  box-shadow: 0 0 12px rgba(124,58,237,0.4);
+  box-shadow: 0 0 12px rgba(244,114,182,0.4);
   -webkit-tap-highlight-color: transparent;
 }
 .btn-primary:active { background: var(--accent2); }
@@ -446,7 +446,7 @@ textarea:focus { border-color: var(--accent); }
   transition: all 0.2s;
   -webkit-tap-highlight-color: transparent;
 }
-.btn-secondary:active { background: rgba(124,58,237,0.2); }
+.btn-secondary:active { background: rgba(244,114,182,0.2); }
 .btn-secondary:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .btn-danger {
@@ -513,3 +513,9 @@ textarea:focus { border-color: var(--accent); }
   letter-spacing: 0.1em;
   color: var(--neon);
 }
+
+/* Eulenwerk */
+.app-logo { width: 24px; height: 24px; border-radius: 6px; }
+.app-title { font-size: 1.1rem !important; }
+.tab-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.app-main > .ew-footer { margin-top: var(--gap); padding-left: 0; padding-right: 0; }
